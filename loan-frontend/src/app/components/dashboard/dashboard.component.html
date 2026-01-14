@@ -1,40 +1,26 @@
-<div class="container mt-5">
-  <h2>Welcome to Your Dashboard!</h2>
-  
-  <button class="btn btn-primary mb-4">Apply for a Loan</button>
+<button (click)="toggleForm()" class="btn btn-primary mb-4">
+  {{ showForm ? 'Cancel' : 'Apply for a Loan' }}
+</button>
 
-  <h3>Your Loan Applications</h3>
-  
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-      <tr>
-        <th>Loan ID</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let loan of loans">
-        <td>{{ loan.id }}</td>
-        <td>{{ loan.loanType }}</td>
-        <td>${{ loan.amount }}</td>
-        <td>{{ loan.applicationDate }}</td>
-        <td>
-          <span [ngClass]="{
-            'badge bg-warning': loan.status === 'PENDING',
-            'badge bg-success': loan.status === 'APPROVED',
-            'badge bg-danger': loan.status === 'REJECTED'
-          }">
-            {{ loan.status }}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <div *ngIf="loans.length === 0" class="alert alert-info">
-    You have not applied for any loans yet.
-  </div>
+<div *ngIf="showForm" class="card p-4 mb-4 shadow-sm" style="max-width: 500px;">
+  <h4>New Loan Application</h4>
+  <form (ngSubmit)="applyLoan()">
+    
+    <div class="mb-3">
+      <label class="form-label">Loan Type</label>
+      <select class="form-select" [(ngModel)]="newLoan.reason" name="reason">
+        <option value="Personal">Personal Loan</option>
+        <option value="Home">Home Loan</option>
+        <option value="Car">Car Loan</option>
+        <option value="Education">Education Loan</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Amount</label>
+      <input type="number" class="form-control" [(ngModel)]="newLoan.amount" name="amount" placeholder="e.g. 10000" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Application</button>
+  </form>
 </div>

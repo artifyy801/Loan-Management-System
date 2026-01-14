@@ -16,7 +16,8 @@ export class SignupComponent {
     name: '',
     email: '',
     password: '',
-    phone: ''
+    phone: '',
+    salary: ''
   };
   constructor(private auth: AuthService, private router: Router){}
   register(){
@@ -26,11 +27,12 @@ export class SignupComponent {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.error("Full Error Object:", err);
-
-        const backendMessage = err.error || "Registration failed. Try again.";
-        
-        alert(backendMessage); 
+        console.error("Full Error:", err);
+        if (err.error && err.error.message) {
+          alert(err.error.message);
+        } else {
+          alert("Registration failed! Please try again.");
+        }
       }
     })
   }

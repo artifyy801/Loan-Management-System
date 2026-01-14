@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class LoanService {
-  private apiUrl = 'http://localhost:8080/loans';
+  private apiUrl = '/api/loans';
 
   constructor(private http: HttpClient) {}
 

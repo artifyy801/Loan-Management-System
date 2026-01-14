@@ -1,30 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // <--- 1. Import this
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms'; // Needed for the form
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule], // <--- 2. Add it here!
+  imports: [CommonModule, FormsModule], // Import modules here
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  
+
+  // --- VARIABLES ---
   loans: any[] = [];
-  userEmail: string = ''; // We will get this from the token later
+  userEmail: string = '';
+  
+  // 1. Variable to toggle the form
+  showForm: boolean = false;
+
+  // 2. Variable to store form data
+  newLoan = {
+    reason: 'Personal',
+    amount: null
+  };
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // For now, let's hardcode an email to test. 
-    // Later we will extract it from the JWT token.
-    this.userEmail = 'trt@example.com'; 
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+      this.userEmail = savedEmail;
+    } else {
+      alert("Please log in first!");
+    }
+
     this.fetchLoans();
   }
 
+  // --- FUNCTIONS ---
+
+  toggleForm() {
+    this.showForm = !this.showForm;
+  }
+
   fetchLoans() {
-    this.http.get<any[]>(`http://localhost:8080/api/loans/my-loans?email=${this.userEmail}`)
+    this.http.get<any[]>(`/api/loans/my-loans?email=${this.userEmail}`)
       .subscribe({
         next: (data) => {
           this.loans = data;
@@ -33,5 +54,24 @@ export class DashboardComponent implements OnInit {
           console.error("Error fetching loans:", err);
         }
       });
+  }
+
+  applyLoan() {
+    // This URL matches your Java Controller: @RequestMapping("/loans") + @PostMapping("/apply")
+    const url = `/api/loans/apply?email=${this.userEmail}`;
+    
+    this.http.post(url, this.newLoan).subscribe({
+      next: (res: any) => {
+        alert("Loan Application Submitted Successfully!");
+        
+        this.showForm = false; // Hide the form
+        this.newLoan = { reason: 'Personal', amount: null }; // Reset form
+        this.fetchLoans(); // Refresh the table immediately
+      },
+      error: (err) => {
+        console.error("Full Error:", err);
+        alert("Error applying for loan. Check console.");
+      }
+    });
   }
 }

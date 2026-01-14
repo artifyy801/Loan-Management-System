@@ -21,7 +21,7 @@ export class LoginComponent {
       next: (res) => {
         // 1. Save the token (The "Key")
         localStorage.setItem('token', res.token);
-        
+        localStorage.setItem('userEmail', this.credentials.email);
         // 2. Redirect to Dashboard
         this.router.navigate(['/dashboard']);
       },
