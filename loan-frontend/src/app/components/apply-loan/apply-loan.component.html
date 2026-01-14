@@ -1,0 +1,19 @@
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h3>Apply for a Loan</h3>
+    <form (ngSubmit)="submitApplication()">
+
+      <div class="mb-3">
+        <label>Loan Amount</label>
+        <input type="number" class="form-control" [(ngModel)]="loan.amount" name="amount" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Reason</label>
+        <textarea class="form-control" [(ngModel)]="loan.reason" name="reason" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-success">Submit Application</button>
+    </form>
+  </div>
+</div>
